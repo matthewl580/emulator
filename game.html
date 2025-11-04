@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game View - Retro Console Engine</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Tone.js for Audio Simulation -->
+    <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+    <style>
+        body { 
+            font-family: "Inter", sans-serif;
+            background-color: #1f2937;
+        }
+        #game-canvas {
+            image-rendering: pixelated;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            border: 4px solid #374151;
+            background-color: #000000;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 flex flex-col items-center justify-center">
+    <main class="w-full max-w-2xl">
+        <!-- Game Display -->
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-white">Game View</h1>
+                <a href="index.html" class="text-gray-300 hover:text-white">Back to IDE</a>
+            </div>
+            
+            <div class="flex flex-col items-center space-y-6">
+                <!-- Game Canvas -->
+                <canvas id="game-canvas" width="512" height="512" class="w-full max-w-lg aspect-square"></canvas>
+
+                <!-- Import Controls -->
+                <div class="w-full bg-gray-700 p-4 rounded-lg">
+                    <div class="flex flex-col space-y-4">
+                        <input type="file" 
+                               id="gameFileInput" 
+                               accept=".json" 
+                               class="block w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-600 file:text-white hover:file:bg-gray-500"
+                               aria-label="Import game file">
+                        <button onclick="loadGame()" 
+                                class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Load Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Game state and engine variables
+        let gameState = null;
+
+        // Function to load and start the game
+        async function loadGame() {
+            const fileInput = document.getElementById('gameFileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a game file first!');
+                return;
+            }
+
+            try {
+                const text = await file.text();
+                gameState = JSON.parse(text);
+                
+                // Initialize the game with the loaded state
+                initGame(gameState);
+            } catch (error) {
+                console.error('Error loading game:', error);
+                alert('Error loading game file. Please make sure it\'s a valid JSON file.');
+            }
+        }
+
+        // Function to initialize the game with loaded state
+        function initGame(state) {
+            if (!state || !state.initCode || !state.updateCode) {
+                alert('Invalid game file format!');
+                return;
+            }
+
+            try {
+                // Here you would initialize your game engine with the loaded code
+                // This is where you'd run the Init() function from the loaded code
+                console.log('Game initialized with:', state);
+                
+                // Start the game loop
+                startGameLoop();
+            } catch (error) {
+                console.error('Error initializing game:', error);
+                alert('Error initializing game. Please check the console for details.');
+            }
+        }
+
+        // Function to start the game loop
+        function startGameLoop() {
+            // Here you would implement your game loop using requestAnimationFrame
+            // This is where you'd run the Update() function from the loaded code
+            console.log('Game loop started');
+        }
+
+        // Initialize the canvas
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    </script>
+</body>
+</html>

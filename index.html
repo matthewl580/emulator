@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>ChipCode - Home</title>
+        <link rel="stylesheet" href="styles.css">
+        <script>
+            // Check for saved theme preference, otherwise use system preference
+            const getPreferredTheme = () => {
+                const saved = localStorage.getItem('theme');
+                if (saved) return saved;
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            };
+
+            // Apply theme to document
+            const applyTheme = (theme) => {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            };
+
+            // Initialize theme
+            applyTheme(getPreferredTheme());
+
+            // Toggle theme function
+            const toggleTheme = () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                applyTheme(next);
+            };
+        </script>
+    </head>
+    <body>
+        <button onclick="toggleTheme()" class="theme-toggle">
+            Toggle Theme
+        </button>
+        <nav class="nav">
+            <div class="nav-inner">
+                <a class="nav-brand" href="/index.html">ChipCode</a>
+                <div class="nav-links">
+                    <a href="/editor/">Editor</a>
+                    <a href="/game/">Play</a>
+                    <a href="/docs/">Docs</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="home-main">
+            <h1>ChipCode Home</h1>
+            <p>Use the links above to open the Editor, the Game view, or the Documentation.</p>
+            <ul>
+                <li><a href="/editor/">Open Editor</a></li>
+                <li><a href="/game/">Open Play</a></li>
+                <li><a href="/docs/">Documentation</a></li>
+            </ul>
+        </main>
+    </body>
+    </html>

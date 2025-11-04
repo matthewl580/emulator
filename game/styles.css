@@ -1,0 +1,15 @@
+/* Game page specific styles */
+body { font-family: Inter, sans-serif; background: #0f172a; color: #fff; margin: 0; }
+.nav { background: #0b1220; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.nav-inner { max-width: 980px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between; padding:0 12px; }
+.nav-brand { color:#fff; font-weight:700; text-decoration:none; }
+.nav-links a { color:#cbd5e1; margin-left:14px; text-decoration:none }
+.nav-links a:hover { color:#fff }
+
+.game-body { display:flex; align-items:center; justify-content:center; min-height: calc(100vh - 64px); padding: 24px; }
+.game-container { width:100%; max-width: 880px; background: #111827; padding: 20px; border-radius: 12px; box-shadow: 0 12px 30px rgba(2,6,23,0.6); }
+#game-canvas { image-rendering: pixelated; border: 4px solid #374151; background:#000; display:block; margin:0 auto }
+.file-input { display:block; width:100%; }
+
+/* small utility */
+.text-sm { font-size: 0.9rem; color:#cbd5e1 }

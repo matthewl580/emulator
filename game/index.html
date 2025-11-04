@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Game - ChipCode Engine</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+</head>
+<body>
+  <!-- Universal Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="/index.html">ChipCode</a>
+      <div class="nav-links">
+        <a href="/editor/">Editor</a>
+        <a href="/game/">Play</a>
+        <a href="/docs/">Docs</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="game-body">
+    <div class="game-container">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-white">Game View</h1>
+        <a href="/editor/" class="text-gray-300 hover:text-white">Open Editor</a>
+      </div>
+
+      <div class="flex flex-col items-center space-y-6">
+        <canvas id="game-canvas" width="512" height="512" class="w-full max-w-lg aspect-square"></canvas>
+
+        <div class="w-full bg-gray-700 p-4 rounded-lg">
+          <div class="flex flex-col space-y-4">
+            <input type="file" id="gameFileInput" accept=".json" class="file-input" aria-label="Import game file">
+            <p class="text-sm text-gray-300">The sample game will load automatically. Use this input to load other JSON files.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

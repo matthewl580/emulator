@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Editor - ChipCode Engine</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+</head>
+<body>
+  <!-- Universal Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="/index.html">ChipCode</a>
+      <div class="nav-links">
+        <a href="/editor/">Editor</a>
+        <a href="/game/">Play</a>
+        <a href="/docs/">Docs</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ide-body">
+    <div class="max-w-7xl mx-auto">
+      <header class="text-center mb-8">
+        <h1 class="text-4xl font-extrabold text-chip-dark tracking-tight">Chip<span class="text-chip-primary">Code</span> Engine Editor</h1>
+        <p class="text-lg text-gray-600 mt-2">Simulating the 64x64 Retro Console Environment</p>
+      </header>
+
+      <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-3 bg-white p-4 rounded-xl shadow-lg">
+          <div class="flex space-x-4">
+            <button id="exportBtn" class="button-primary flex-1">Export Code</button>
+            <button id="importBtn" class="button-secondary flex-1">Import Code</button>
+            <a href="/game/" class="button-primary flex-1 text-center">Open Game View (/game)</a>
+          </div>
+          <input type="file" id="fileInput" accept=".json" class="hidden" aria-label="Import game file">
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-chip-dark border-b pb-2">Game Preview</h2>
+            <canvas id="game-canvas" width="512" height="512" class="w-full max-w-lg aspect-square mx-auto"></canvas>
+          </div>
+        </div>
+
+        <div class="lg:col-span-1">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-chip-dark border-b pb-2">Game Code</h2>
+            <div class="space-y-4">
+              <div>
+                <label for="initCode" class="block text-sm font-medium text-gray-700">Initialization Code</label>
+                <textarea id="initCode" rows="10" class="code-editor"></textarea>
+              </div>
+              <div>
+                <label for="updateCode" class="block text-sm font-medium text-gray-700">Update Code</label>
+                <textarea id="updateCode" rows="10" class="code-editor"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

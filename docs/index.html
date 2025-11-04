@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ChipCode - Documentation</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script>
+        // Theme handling
+        const getPreferredTheme = () => {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+
+        const applyTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        };
+
+        applyTheme(getPreferredTheme());
+
+        const toggleTheme = () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+        };
+    </script>
+</head>
+<body class="ide-body">
+    <button onclick="toggleTheme()" class="theme-toggle">
+        Toggle Theme
+    </button>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a class="nav-brand" href="../index.html">ChipCode</a>
+            <div class="nav-links">
+                <a href="../editor/">Editor</a>
+                <a href="../game/">Play</a>
+                <a href="../docs/">Docs</a>
+            </div>
+        </div>
+    </nav>  <main style="max-width:980px;margin:40px auto;padding:12px;">
+    <h1>Documentation</h1>
+    <p>This is a short documentation page for the ChipCode Engine.</p>
+    <h2>Quick Start</h2>
+    <ol>
+      <li>Open <a href="/editor/">Editor</a> to write code.</li>
+      <li>Export as JSON and open <a href="/game/">Play</a> to run.</li>
+    </ol>
+    <h2>Sample game</h2>
+    <p>The sample game is available at <code>sample-game.json</code>. It auto-loads when you open the Play page.</p>
+  </main>
+</body>
+</html>

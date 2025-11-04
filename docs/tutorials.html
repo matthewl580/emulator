@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ChipCode - Tutorials</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script>
+        // Theme handling
+        const getPreferredTheme = () => {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+
+        const applyTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        };
+
+        applyTheme(getPreferredTheme());
+
+        const toggleTheme = () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+        };
+    </script>
+</head>
+<body class="ide-body">
+    <button onclick="toggleTheme()" class="theme-toggle">
+        Toggle Theme
+    </button>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a class="nav-brand" href="../index.html">ChipCode</a>
+            <div class="nav-links">
+                <a href="../editor/">Editor</a>
+                <a href="../game/">Play</a>
+                <a href="../docs/">Docs</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="home-main">
+        <h1>Tutorials</h1>
+
+        <section>
+            <h2>Getting Started</h2>
+            
+            <h3>1. Creating Your First Game</h3>
+            <p>Let's create a simple moving dot game:</p>
+            <pre class="code-editor">
+// In initCode:
+window._playerX = 32;
+window._playerY = 32;
+
+// In updateCode:
+(function(){
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Clear screen
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw player
+    const scale = canvas.width / 64;
+    ctx.fillStyle = '#ff0000';
+    ctx.fillRect(window._playerX * scale, 
+                window._playerY * scale,
+                scale, scale);
+})();</pre>
+        </section>
+
+        <section>
+            <h2>Adding Player Movement</h2>
+            <p>Enhance the game with keyboard controls:</p>
+            <pre class="code-editor">
+// In initCode:
+window._state = {
+    player: { x: 32, y: 32 }
+};
+
+document.onkeydown = (e) => {
+    switch(e.key) {
+        case 'ArrowLeft':
+            window._state.player.x = 
+                Math.max(0, window._state.player.x - 1);
+            break;
+        case 'ArrowRight':
+            window._state.player.x = 
+                Math.min(63, window._state.player.x + 1);
+            break;
+        case 'ArrowUp':
+            window._state.player.y = 
+                Math.max(0, window._state.player.y - 1);
+            break;
+        case 'ArrowDown':
+            window._state.player.y = 
+                Math.min(63, window._state.player.y + 1);
+            break;
+    }
+};</pre>
+        </section>
+
+        <section>
+            <h2>Adding Collectibles</h2>
+            <p>Create coins for the player to collect:</p>
+            <pre class="code-editor">
+// In initCode:
+window._state = {
+    player: { x: 32, y: 32, score: 0 },
+    coins: Array(5).fill().map(() => ({
+        x: Math.floor(Math.random() * 64),
+        y: Math.floor(Math.random() * 64)
+    }))
+};
+
+// In updateCode:
+function checkCollisions() {
+    window._state.coins = window._state.coins.filter(coin => {
+        if (Math.abs(coin.x - window._state.player.x) < 2 &&
+            Math.abs(coin.y - window._state.player.y) < 2) {
+            window._state.score += 10;
+            return false;
+        }
+        return true;
+    });
+}
+
+// Draw coins
+window._state.coins.forEach(coin => {
+    ctx.fillStyle = '#ffff00';
+    ctx.fillRect(coin.x * scale, coin.y * scale, 
+                scale, scale);
+});</pre>
+        </section>
+
+        <section>
+            <h2>Adding Sound Effects</h2>
+            <p>Enhance gameplay with audio feedback:</p>
+            <pre class="code-editor">
+// In initCode:
+window._synth = new Tone.Synth().toDestination();
+window._effects = {
+    coinCollect: () => {
+        window._synth.triggerAttackRelease('C5', '16n');
+    },
+    jump: () => {
+        window._synth.triggerAttackRelease('G4', '8n');
+    }
+};
+
+// Use in game logic:
+if (collectCoin) {
+    window._effects.coinCollect();
+}</pre>
+        </section>
+
+        <section>
+            <h2>Creating Animations</h2>
+            <p>Add simple animations to your game:</p>
+            <pre class="code-editor">
+// In initCode:
+window._animations = {
+    explosion: {
+        frames: [0, 1, 2, 3, 4],
+        current: 0,
+        timer: 0
+    }
+};
+
+// In updateCode:
+function updateAnimation(anim) {
+    anim.timer++;
+    if (anim.timer > 5) {
+        anim.timer = 0;
+        anim.current = (anim.current + 1) % anim.frames.length;
+    }
+}
+
+// Draw animation frame
+function drawExplosion(x, y) {
+    const anim = window._animations.explosion;
+    updateAnimation(anim);
+    
+    // Draw different patterns based on frame
+    switch(anim.frames[anim.current]) {
+        case 0: drawSmall(x, y); break;
+        case 1: drawMedium(x, y); break;
+        case 2: drawLarge(x, y); break;
+        case 3: drawMedium(x, y); break;
+        case 4: drawSmall(x, y); break;
+    }
+}</pre>
+        </section>
+
+        <section>
+            <h2>Implementing Game States</h2>
+            <p>Add menus and different game states:</p>
+            <pre class="code-editor">
+// In initCode:
+window._state = {
+    currentScreen: 'title', // title, playing, gameOver
+    player: { x: 32, y: 32, score: 0 }
+};
+
+// In updateCode:
+switch(window._state.currentScreen) {
+    case 'title':
+        drawTitleScreen();
+        break;
+    case 'playing':
+        updateGame();
+        break;
+    case 'gameOver':
+        drawGameOver();
+        break;
+}
+
+function drawTitleScreen() {
+    // Clear screen
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw title
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '16px monospace';
+    ctx.fillText('My Game', 20, 30);
+    ctx.fillText('Press SPACE', 20, 50);
+}
+
+// Handle state changes
+document.onkeydown = (e) => {
+    if (e.code === 'Space') {
+        switch(window._state.currentScreen) {
+            case 'title':
+                window._state.currentScreen = 'playing';
+                break;
+            case 'gameOver':
+                resetGame();
+                window._state.currentScreen = 'playing';
+                break;
+        }
+    }
+};</pre>
+        </section>
+
+        <section>
+            <h2>Adding Particle Effects</h2>
+            <p>Create simple particle systems:</p>
+            <pre class="code-editor">
+// In initCode:
+window._particles = [];
+
+function createParticle(x, y) {
+    return {
+        x, y,
+        dx: (Math.random() - 0.5) * 2,
+        dy: (Math.random() - 0.5) * 2,
+        life: 30
+    };
+}
+
+// In updateCode:
+function updateParticles() {
+    for (let i = window._particles.length - 1; i >= 0; i--) {
+        const p = window._particles[i];
+        
+        // Update position
+        p.x += p.dx;
+        p.y += p.dy;
+        p.life--;
+        
+        // Remove dead particles
+        if (p.life <= 0) {
+            window._particles.splice(i, 1);
+            continue;
+        }
+        
+        // Draw particle
+        const scale = canvas.width / 64;
+        ctx.fillStyle = '#ffff00';
+        ctx.globalAlpha = p.life / 30;
+        ctx.fillRect(p.x * scale, p.y * scale, 
+                    scale/2, scale/2);
+        ctx.globalAlpha = 1;
+    }
+}</pre>
+        </section>
+    </main>
+</body>
+</html>

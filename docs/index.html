@@ -4,34 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>ChipCode - Documentation</title>
-    <link rel="stylesheet" href="../styles.css">
-    <script>
-        // Theme handling
-        const getPreferredTheme = () => {
-            const saved = localStorage.getItem('theme');
-            if (saved) return saved;
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        };
-
-        const applyTheme = (theme) => {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-        };
-
-        applyTheme(getPreferredTheme());
-
-        const toggleTheme = () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            applyTheme(next);
-        };
-    </script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap">
 </head>
 <body class="ide-body">
-    <button onclick="toggleTheme()" class="theme-toggle">
-        Toggle Theme
-    </button>
-
     <nav class="nav">
         <div class="nav-inner">
             <a class="nav-brand" href="../index.html">ChipCode</a>
@@ -41,13 +18,942 @@
                 <a href="../docs/">Docs</a>
             </div>
         </div>
-    </nav>  <main style="max-width:980px;margin:40px auto;padding:12px;">
-    <h1>Documentation</h1>
-    <p>This is a short documentation page for the ChipCode Engine.</p>
-    <h2>Quick Start</h2>
-    <ol>
-      <li>Open <a href="/editor/">Editor</a> to write code.</li>
-      <li>Export as JSON and open <a href="/game/">Play</a> to run.</li>
+    </nav>
+
+    <main class="home-main">
+        <h1><i class="mdi mdi-book-open-variant"></i> ChipCode Documentation</h1>
+
+        <nav class="doc-nav">
+            <ul>
+                <li><a href="#getting-started"><i class="mdi mdi-rocket-launch"></i>Getting Started</a></li>
+                <li><a href="#game-structure"><i class="mdi mdi-code-braces"></i>Game Structure</a></li>
+                <li><a href="#api-reference"><i class="mdi mdi-api"></i>API Reference</a></li>
+                <li><a href="#example-game"><i class="mdi mdi-gamepad-variant"></i>Example Game</a></li>
+            </ul>
+        </nav>
+
+        <section id="getting-started">
+            <h2>Getting Started</h2>
+            <p>Welcome to ChipCode! This game engine lets you create retro-style games with a 64x64 pixel canvas and built-in audio support.</p>
+
+            <div class="card">
+                <h3><i class="mdi mdi-rocket-launch"></i> Quick Start</h3>
+                <ol>
+                    <li>Open the <a href="../editor/">Editor</a></li>
+                    <li>Create initialization code for your game state</li>
+                    <li>Write update code for game logic and rendering</li>
+                    <li>Test your game in the live preview</li>
+                    <li>Share your game with others</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3><i class="mdi mdi-star"></i> Core Features</h3>
+                <ul>
+                    <li><i class="mdi mdi-grid"></i> 64x64 pixel canvas with automatic scaling</li>
+                    <li><i class="mdi mdi-music"></i> Advanced audio synthesis with Tone.js</li>
+                    <li><i class="mdi mdi-gamepad"></i> Built-in keyboard input handling</li>
+                    <li><i class="mdi mdi-vector-point"></i> Simple collision detection</li>
+                    <li><i class="mdi mdi-animation"></i> Support for game state and animations</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="game-structure">
+            <h2><i class="mdi mdi-code-braces"></i> Game Structure</h2>
+            
+            <div class="card">
+                <h3>Game Components</h3>
+                <p>Every ChipCode game consists of two main parts:</p>
+                
+                <h4>1. Initialization Code</h4>
+                <p>This runs once when your game starts. Use it to:</p>
+                <ul>
+                    <li>Set up initial game state</li>
+                    <li>Create game objects</li>
+                    <li>Initialize audio</li>
+                    <li>Set up event handlers</li>
+                </ul>
+
+                <h4>2. Update Code</h4>
+                <p>This runs every frame. Use it to:</p>
+                <ul>
+                    <li>Handle input</li>
+                    <li>Update game state</li>
+                    <li>Draw graphics</li>
+                    <li>Check collisions</li>
+                    <li>Play sounds</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="api-reference">
+            <h2><i class="mdi mdi-api"></i> API Reference</h2>
+
+            <div class="card">
+                <h3>Canvas Context</h3>
+                <pre class="code-editor">
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+
+// Clear screen
+ctx.fillStyle = '#000022';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+// Draw shapes
+ctx.fillStyle = '#ff0000';
+ctx.fillRect(x, y, width, height);</pre>
+            </div>
+
+            <div class="card">
+                <h3>Game State Management</h3>
+                <pre class="code-editor">
+// Create game state
+window._state = {
+    player: { x: 32, y: 32, score: 0 },
+    enemies: [],
+    gameOver: false
+};
+
+// Access state in update
+const state = window._state;
+if (state.gameOver) return;</pre>
+            </div>
+
+            <div class="card">
+                <h3>Input Handling</h3>
+                <pre class="code-editor">
+document.onkeydown = (e) => {
+    switch(e.key) {
+        case 'ArrowLeft': 
+            state.player.x = Math.max(0, state.player.x - 1);
+            break;
+        case 'ArrowRight':
+            state.player.x = Math.min(63, state.player.x + 1);
+            break;
+        // etc
+    }
+};</pre>
+            </div>
+
+            <div class="card">
+                <h3>Audio System</h3>
+                <pre class="code-editor">
+// Create synthesizers
+const synth = new Tone.PolySynth().toDestination();
+const bassLine = new Tone.Synth({
+    oscillator: { type: 'triangle' },
+    envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 0.8 }
+}).toDestination();
+
+// Create music loops
+const melodyLoop = new Tone.Loop((time) => {
+    synth.triggerAttackRelease(note, duration, time);
+}, interval);
+
+// Sound effects
+const effects = {
+    coin: () => synth.triggerAttackRelease(['C6', 'E6'], '16n'),
+    hit: () => synth.triggerAttackRelease(['C3', 'G2'], '8n')
+};</pre>
+            </div>
+
+            <div class="card">
+                <h3>Collision Detection</h3>
+                <pre class="code-editor">
+// Simple distance-based collision
+function checkCollision(obj1, obj2) {
+    return Math.abs(obj1.x - obj2.x) < 2 && 
+           Math.abs(obj1.y - obj2.y) < 2;
+}
+
+// Usage example
+if (checkCollision(player, enemy)) {
+    gameOver();
+}</pre>
+            </div>
+        </section>
+// In initCode:
+window._state = {
+    player: { x: 32, y: 32 }
+};
+
+document.onkeydown = (e) => {
+    switch(e.key) {
+        case 'ArrowLeft':
+            window._state.player.x = 
+                Math.max(0, window._state.player.x - 1);
+            break;
+        case 'ArrowRight':
+            window._state.player.x = 
+                Math.min(63, window._state.player.x + 1);
+            break;
+        case 'ArrowUp':
+            window._state.player.y = 
+                Math.max(0, window._state.player.y - 1);
+            break;
+        case 'ArrowDown':
+            window._state.player.y = 
+                Math.min(63, window._state.player.y + 1);
+            break;
+    }
+};</pre>
+            </article>
+
+            <article class="tutorial">
+                <h3>Adding Collectibles</h3>
+                <p>Create coins for the player to collect:</p>
+                <pre class="code-editor">
+// In initCode:
+window._state = {
+    player: { x: 32, y: 32, score: 0 },
+    coins: Array(5).fill().map(() => ({
+        x: Math.floor(Math.random() * 64),
+        y: Math.floor(Math.random() * 64)
+    }))
+};
+
+// In updateCode:
+function checkCollisions() {
+    window._state.coins = window._state.coins.filter(coin => {
+        if (Math.abs(coin.x - window._state.player.x) < 2 &&
+            Math.abs(coin.y - window._state.player.y) < 2) {
+            window._state.score += 10;
+            return false;
+        }
+        return true;
+    });
+}
+
+// Draw coins
+window._state.coins.forEach(coin => {
+    ctx.fillStyle = '#ffff00';
+    ctx.fillRect(coin.x * scale, coin.y * scale, 
+                scale, scale);
+});</pre>
+            </article>
+
+            <article class="tutorial">
+                <h3>Adding Sound Effects</h3>
+                <p>Enhance gameplay with audio feedback:</p>
+                <pre class="code-editor">
+// In initCode:
+window._synth = new Tone.Synth().toDestination();
+window._effects = {
+    coinCollect: () => {
+        window._synth.triggerAttackRelease('C5', '16n');
+    },
+    jump: () => {
+        window._synth.triggerAttackRelease('G4', '8n');
+    }
+};
+
+// Use in game logic:
+if (collectCoin) {
+    window._effects.coinCollect();
+}</pre>
+            </article>
+
+            <article class="tutorial">
+                <h3>Creating Animations</h3>
+                <p>Add simple animations to your game:</p>
+                <pre class="code-editor">
+// In initCode:
+window._animations = {
+    explosion: {
+        frames: [0, 1, 2, 3, 4],
+        current: 0,
+        timer: 0
+    }
+};
+
+// In updateCode:
+function updateAnimation(anim) {
+    anim.timer++;
+    if (anim.timer > 5) {
+        anim.timer = 0;
+        anim.current = (anim.current + 1) % anim.frames.length;
+    }
+}
+
+// Draw animation frame
+function drawExplosion(x, y) {
+    const anim = window._animations.explosion;
+    updateAnimation(anim);
+    
+    // Draw different patterns based on frame
+    switch(anim.frames[anim.current]) {
+        case 0: drawSmall(x, y); break;
+        case 1: drawMedium(x, y); break;
+        case 2: drawLarge(x, y); break;
+        case 3: drawMedium(x, y); break;
+        case 4: drawSmall(x, y); break;
+    }
+}</pre>
+            </div>
+        </section>
+
+        <section id="example-game">
+            <h2><i class="mdi mdi-gamepad-variant"></i> Example Game</h2>
+            
+            <div class="card">
+                <h3>Coin Collection Game</h3>
+                <p>A complete example game where you collect coins while avoiding enemies. Use the arrow keys to move, collect yellow coins to increase your score, and avoid red enemies!</p>
+
+                <h4>Initialization Code</h4>
+                <pre class="code-editor">
+// Game state setup
+window._state = {
+    player: { x: 32, y: 32, score: 0 },
+    coins: Array(5).fill().map(() => ({
+        x: Math.floor(Math.random() * 64),
+        y: Math.floor(Math.random() * 64)
+    })),
+    enemies: Array(3).fill().map(() => ({
+        x: Math.floor(Math.random() * 64),
+        y: Math.floor(Math.random() * 64),
+        dx: Math.random() > 0.5 ? 1 : -1,
+        dy: Math.random() > 0.5 ? 1 : -1
+    })),
+    gameOver: false
+};
+
+// Audio setup
+try {
+    window._synth = new Tone.PolySynth().toDestination();
+    window._bassLine = new Tone.Synth({
+        oscillator: { type: 'triangle' },
+        envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 0.8 }
+    }).toDestination();
+    
+    // Music patterns
+    const melody = ['C4','E4','G4','C5','G4','E4'];
+    const bassline = ['C3', 'G2', 'A2', 'F2'];
+    
+    let mi = 0, bi = 0;
+    
+    // Setup music loops
+    window._melodyLoop = new Tone.Loop((time) => {
+        window._synth.triggerAttackRelease(
+            melody[mi % melody.length], '8n', time
+        );
+        mi++;
+    }, '4n');
+    
+    window._bassLoop = new Tone.Loop((time) => {
+        window._bassLine.triggerAttackRelease(
+            bassline[bi % bassline.length], '2n', time
+        );
+        bi++;
+    }, '2n');
+    
+    // Sound effects
+    window._effects = {
+        coinSound: () => window._synth.triggerAttackRelease(['C6', 'E6'], '16n'),
+        hitSound: () => window._synth.triggerAttackRelease(['C3', 'G2'], '8n'),
+        gameOverSound: () => {
+            window._synth.triggerAttackRelease(['C4', 'G3', 'E3', 'C3'], '2n');
+            window._melodyLoop.stop();
+            window._bassLoop.stop();
+        }
+    };
+
+    Tone.Transport.bpm.value = 120;
+    window._melodyLoop.start(0);
+    window._bassLoop.start(0);
+    
+} catch (e) { 
+    console.warn('Audio unavailable', e);
+}
+
+                </pre>
+
+                <h4>Update Code</h4>
+                <pre class="code-editor">
+// Game update loop
+(function(){
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const state = window._state;
+    if (!state || state.gameOver) return;
+
+    // Input handling
+    document.onkeydown = (e) => {
+        if (state.gameOver) return;
+        switch(e.key) {
+            case 'ArrowLeft': 
+                state.player.x = Math.max(0, state.player.x - 1);
+                break;
+            case 'ArrowRight':
+                state.player.x = Math.min(63, state.player.x + 1);
+                break;
+            case 'ArrowUp':
+                state.player.y = Math.max(0, state.player.y - 1);
+                break;
+            case 'ArrowDown':
+                state.player.y = Math.min(63, state.player.y + 1);
+                break;
+        }
+    };
+
+    // Clear screen and set scale
+    ctx.fillStyle = '#000022';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const scale = canvas.width / 64;
+
+    // Draw animated background stars
+    for (let i = 0; i < 20; i++) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(
+            ((Math.sin(Date.now()/1000 + i) * 32 + 32) * scale),
+            ((Math.cos(Date.now()/1000 + i) * 32 + 32) * scale),
+            scale/2,
+            scale/2
+        );
+    }
+
+    // Update and draw coins
+    state.coins.forEach(coin => {
+        // Collect coins
+        if (Math.abs(coin.x - state.player.x) < 2 && 
+            Math.abs(coin.y - state.player.y) < 2) {
+            state.player.score += 10;
+            coin.x = Math.floor(Math.random() * 64);
+            coin.y = Math.floor(Math.random() * 64);
+            if (window._effects) window._effects.coinSound();
+        }
+
+        // Draw coin
+        ctx.fillStyle = '#ffff00';
+        ctx.fillRect(coin.x * scale, coin.y * scale, scale, scale);
+    });
+
+    // Update and draw enemies
+    state.enemies.forEach(enemy => {
+        // Move enemies
+        enemy.x += enemy.dx;
+        enemy.y += enemy.dy;
+        
+        // Bounce off walls
+        if (enemy.x <= 0 || enemy.x >= 63) enemy.dx *= -1;
+        if (enemy.y <= 0 || enemy.y >= 63) enemy.dy *= -1;
+
+        // Check collision with player
+        if (Math.abs(enemy.x - state.player.x) < 2 && 
+            Math.abs(enemy.y - state.player.y) < 2) {
+            state.gameOver = true;
+            if (window._effects) window._effects.gameOverSound();
+        }
+
+        // Draw enemy
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(enemy.x * scale, enemy.y * scale, scale, scale);
+    });
+
+    // Draw player
+    ctx.fillStyle = '#00ff00';
+    ctx.fillRect(state.player.x * scale, state.player.y * scale, 
+                scale, scale);
+
+    // Draw score
+    ctx.fillStyle = '#ffffff';
+    ctx.font = (12 * (canvas.width/512)) + 'px monospace';
+    ctx.fillText(`Score: ${state.player.score}`, 8, 18);
+
+    // Game over text
+    if (state.gameOver) {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = (24 * (canvas.width/512)) + 'px monospace';
+        ctx.fillText('Game Over!', canvas.width/4, canvas.height/2);
+    }
+})();
+                </pre>
+            </div>
+        </section>
+
+            <h4><i class="mdi mdi-cog"></i> Setup Section</h4>
+            <div class="code-section">
+                <div class="code-header">
+                    <i class="mdi mdi-function"></i>
+                    <span>Game Initialization</span>
+                </div>
+                <pre class="code-editor">
+setup {
+    # Initialize game state
+    let player = [x: 32, y: 32, score: 0];
+    let enemies = [];
+    
+    # Setup input handlers
+    on key_press(key) {
+        if (key == "LEFT") {
+            move_player(-1, 0);
+        }
+    }
+    
+    # Setup game systems
+    init_sound();
+    init_graphics();
+}</pre>
+                <div class="code-footer">
+                    <i class="mdi mdi-information"></i>
+                    The setup section runs once when your game starts. Use it to initialize variables and set up event handlers.
+                </div>
+            </div>
+
+            <h4><i class="mdi mdi-refresh"></i> Loop Section</h4>
+            <div class="code-section">
+                <div class="code-header">
+                    <i class="mdi mdi-refresh"></i>
+                    <span>Game Loop</span>
+                </div>
+                <pre class="code-editor">
+loop {
+    # Clear screen
+    clear(#000000);
+    
+    # Update game state
+    move_enemies();
+    check_collisions();
+    
+    # Draw everything
+    draw_sprites();
+    draw_ui();
+}</pre>
+                <div class="code-footer">
+                    <i class="mdi mdi-information"></i>
+                    The loop section runs every frame (60 times per second). Use it to update game state and draw to the screen.
+                </div>
+            </div>
+
+            <h3>Built-in Commands</h3>
+            
+            <h4>Graphics Commands</h4>
+            <pre class="code-editor">
+# Clear the screen
+clear #000000
+
+# Draw a pixel
+pixel 10 20 #ff0000
+
+# Draw shapes
+rect 0 0 10 10 #00ff00
+circle 32 32 5 #0000ff
+
+# Draw text
+text "Score: 100" 5 5 #ffffff
+
+# Draw sprites
+sprite "player" 32 32
+sprite "coin" 10 20 [flip: true, rotate: 90]</pre>
+
+            <h4><i class="mdi mdi-gamepad"></i> Input Commands</h4>
+            <div class="code-section">
+                <div class="code-header">
+                    <i class="mdi mdi-keyboard"></i>
+                    <span>Input Handling</span>
+                </div>
+                <pre class="code-editor">
+# Key press handler
+on key_press(key) {
+    if (key == "SPACE") {
+        jump();
+    }
+}
+
+# Mouse handler
+on mouse_click(x, y) {
+    shoot(x, y);
+}
+
+# Check key state
+if (key_down("UP")) {
+    move_up();
+}
+
+# Get mouse position
+let mouse_x = mouse_x();
+let mouse_y = mouse_y();</pre>
+                <div class="code-footer">
+                    <i class="mdi mdi-information"></i>
+                    Handle keyboard and mouse input to make your game interactive.
+                </div>
+            </div>
+
+            <h4><i class="mdi mdi-music"></i> Audio Commands</h4>
+            <div class="code-section">
+                <div class="code-header">
+                    <i class="mdi mdi-volume-high"></i>
+                    <span>Sound & Music</span>
+                </div>
+                <pre class="code-editor">
+# Play sound effects
+sound("jump", [volume: 0.8]);
+sound("coin", [pitch: 1.2]);
+
+# Play music
+music("theme", [tempo: 120]);
+stop_music();
+
+# Play notes
+note("C4", 0.5);
+note("E4", 0.5, [instrument: "square"]);</pre>
+                <div class="code-footer">
+                    <i class="mdi mdi-information"></i>
+                    Add sound effects and background music to enhance your game's atmosphere.
+                </div>
+            </div>
+
+            <h3>Graphics Methods</h3>
+            <pre class="code-editor">
+// Clear the screen
+clearScreen(color = '#000000')
+
+// Draw a pixel
+setPixel(x, y, color)
+
+// Draw a rectangle
+drawRect(x, y, width, height, color)
+
+// Draw a circle
+drawCircle(x, y, radius, color)
+
+// Draw text
+drawText(text, x, y, options = {
+    color: '#ffffff',
+    size: 12,
+    align: 'left'
+})
+
+// Draw a sprite
+drawSprite(spriteId, x, y, options = {
+    flipX: false,
+    flipY: false,
+    rotation: 0
+})</pre>
+
+            <h3>Audio Methods</h3>
+            <pre class="code-editor">
+// Play a sound effect
+playSound(name, options = {
+    volume: 1.0,
+    pitch: 1.0,
+    loop: false
+})
+
+// Play a musical note
+playNote(note, duration, options = {
+    instrument: 'square',
+    volume: 1.0
+})
+
+// Start/stop background music
+startMusic(pattern, options = {
+    tempo: 120,
+    volume: 0.8
+})
+stopMusic()</pre>
+
+            <h3><i class="mdi mdi-calculator"></i> Math and Physics</h3>
+            <div class="code-section">
+                <div class="code-header">
+                    <i class="mdi mdi-function-variant"></i>
+                    <span>Math Operations</span>
+                </div>
+                <pre class="code-editor">
+# Math functions
+let r = random(1, 10);     # Random number 1-10
+let c = clamp(x, 0, 100);  # Clamp value between 0-100
+let l = lerp(0, 100, 0.5); # Interpolate between values
+
+# Vector operations
+let v1 = vector(3, 4);
+let v2 = vector(1, 2);
+let v3 = v1 + v2;         # Vector addition
+let scaled = v1 * 2;      # Vector scaling
+let dist = distance(v1, v2);</pre>
+                <div class="code-footer">
+                    <i class="mdi mdi-information"></i>
+                    Built-in math functions for common game calculations.
+                </div>
+            </div>
+
+            <div class="code-section">
+                <div class="code-header">
+                    <i class="mdi mdi-vector-rectangle"></i>
+                    <span>Collision Detection</span>
+                </div>
+                <pre class="code-editor">
+# Collisions
+if (collide(player, enemy)) {
+    game_over();
+}
+
+if (point_in_rect(x, y, rect)) {
+    collect_item();
+}
+
+if (circle_overlap(c1, c2)) {
+    bounce();
+}</pre>
+                <div class="code-footer">
+                    <i class="mdi mdi-information"></i>
+                    Simple collision detection functions for different shape types.
+                </div>
+            </div>
+
+            <h3><i class="mdi mdi-atom"></i> Game Physics</h3>
+            <div class="code-section">
+                <div class="code-header">
+                    <i class="mdi mdi-motion"></i>
+                    <span>Physics System</span>
+                </div>
+                <pre class="code-editor">
+# Basic physics system
+let gravity = 0.5;
+let friction = 0.8;
+
+func update_physics() {
+    # Apply gravity
+    player.vy = player.vy + gravity;
+    
+    # Apply velocity
+    player.x = player.x + player.vx;
+    player.y = player.y + player.vy;
+    
+    # Apply friction
+    player.vx = player.vx * friction;
+    
+    # Handle collisions
+    if (collide(player, ground)) {
+        player.y = ground.y;
+        player.vy = 0;
+    }
+}</pre>
+                <div class="code-footer">
+                    <i class="mdi mdi-information"></i>
+                    Implement basic physics with gravity, velocity, and collision response.
+                </div>
+            </div>
+
+            <h3>Sample Games</h3>
+            <p>Here's a complete example of a simple platformer game in ChipScript:</p>
+            <pre class="code-editor">
+# Simple Platformer in ChipScript
+setup {
+    # Create player with position and physics
+    let player = [
+        x: 32, y: 32,      # Position
+        vx: 0, vy: 0,      # Velocity
+        width: 4, height: 4,
+        can_jump: false
+    ];
+    
+    # Create platforms
+    let platforms = [
+        [x: 10, y: 50, width: 20, height: 2],
+        [x: 40, y: 40, width: 20, height: 2]
+    ];
+    
+    # Physics constants
+    let gravity = 0.5;
+    let jump_force = -8;
+    
+    # Input handler for jumping
+    on key_press(key) {
+        if (key == "UP" && player.can_jump) {
+            player.vy = jump_force;
+            sound "jump" [volume: 0.5];
+        }
+    }
+}
+
+# Main game loop 
+loop {
+    # Apply gravity and movement
+    player.vy = player.vy + gravity;
+    
+    if (key_down("LEFT")) {
+        player.vx = -2;
+    } else if (key_down("RIGHT")) {
+        player.vx = 2;
+    } else {
+        player.vx = player.vx * 0.8;  # Friction
+    }
+    
+    # Update position
+    player.x = player.x + player.vx;
+    player.y = player.y + player.vy;
+    
+    # Check platform collisions
+    player.can_jump = false;
+    for (platform in platforms) {
+        if (rect_overlap(player, platform)) {
+            if (player.vy > 0) {
+                player.y = platform.y - player.height;
+                player.vy = 0;
+                player.can_jump = true;
+            }
+        }
+    }
+    
+    # Keep in bounds and draw
+    player.x = clamp(player.x, 0, 60);
+    player.y = clamp(player.y, 0, 60);
+    
+    clear(#000033);
+    for (platform in platforms) {
+        rect(platform.x, platform.y, platform.width, platform.height, #666666);
+    }
+    rect(player.x, player.y, player.width, player.height, #00ff00);
+}</pre>
+
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Keep your game state organized in well-named variables</li>
+                <li>Use lists to manage collections of similar objects</li>
+                <li>Use the built-in entity manager for game objects</li>
+                <li>Pre-calculate values when possible</li>
+                <li>Use the debug display mode (3) to monitor performance</li>
+                <li>Batch similar draw operations together</li>
+                <li>Use object pooling for frequently created/destroyed objects</li>
+            </ul>
+        </section>
+
+        <style>
+            
+
+           
+
+            .doc-nav {
+                position: sticky;
+                top: 0;
+                background: var(--bg-primary);
+                padding: 1rem 0;
+                margin-bottom: 2rem;
+                border-bottom: 1px solid var(--border-color);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                z-index: 100;
+            }
+
+            .doc-nav ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                gap: 2rem;
+            }
+
+            .doc-nav a {
+                color: var(--text-primary);
+                text-decoration: none;
+                padding: 0.5rem 1rem;
+                border-radius: 0.25rem;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .doc-nav a:hover {
+                background-color: var(--accent-secondary);
+                transform: translateY(-1px);
+            }
+
+            .code-section {
+                background-color: var(--bg-secondary);
+                border: 1px solid var(--border-color);
+                border-radius: 0.5rem;
+                margin: 2rem 0;
+                overflow: hidden;
+            }
+
+            .code-header {
+                background-color: var(--bg-tertiary);
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid var(--border-color);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .code-header i {
+                color: var(--accent-primary);
+            }
+
+            .code-editor {
+                background-color: var(--bg-secondary);
+                padding: 1.5rem;
+                margin: 0;
+                overflow-x: auto;
+                font-family: 'Fira Code', monospace;
+                line-height: 1.5;
+            }
+
+            .code-footer {
+                background-color: var(--bg-tertiary);
+                padding: 0.75rem 1rem;
+                border-top: 1px solid var(--border-color);
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+            }
+
+            code {
+                background-color: var(--bg-tertiary);
+                padding: 0.2rem 0.4rem;
+                border-radius: 0.25rem;
+                font-family: 'Fira Code', monospace;
+            }
+
+            h2 {
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 0.5rem;
+                margin-top: 2rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            h3 {
+                margin-top: 2rem;
+                color: var(--text-secondary);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .tutorial {
+                background-color: var(--bg-secondary);
+                border: 1px solid var(--border-color);
+                border-radius: 0.5rem;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .tutorial:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            }
+
+            .icon {
+                width: 1.2em;
+                height: 1.2em;
+                vertical-align: middle;
+            }
+
+            .icon-sm {
+                width: 1em;
+                height: 1em;
+            }
+
+            .icon-lg {
+                width: 1.5em;
+                height: 1.5em;
+            }
+        </style>
+    </main>
+</body>
+</html>
     </ol>
     <h2>Sample game</h2>
     <p>The sample game is available at <code>sample-game.json</code>. It auto-loads when you open the Play page.</p>

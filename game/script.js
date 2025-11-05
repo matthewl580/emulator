@@ -35,12 +35,24 @@ function gameLoop() {
   frameCount++;
 }
 
+function updateStatus(message, isError = false) {
+  const statusEl = document.getElementById('game-status');
+  if (statusEl) {
+    statusEl.textContent = message;
+    statusEl.style.color = isError ? '#ff4444' : '#44ff44';
+  }
+}
+
 function startGame() {
-  if (!gameState) return;
+  if (!gameState) {
+    updateStatus('No game loaded', true);
+    return;
+  }
   stopGame();
   isRunning = true;
   initEngine();
   gameLoopInterval = setInterval(gameLoop, 1000 / ENGINE.frameRate);
+  updateStatus('Game running');
 }
 
 function stopGame() {
@@ -51,6 +63,7 @@ function stopGame() {
 async function handleFileSelect(event) {
   const file = event.target.files[0];
   if (!file) return;
+  updateStatus('Loading game file...');
   try {
     const text = await file.text();
     const parsed = JSON.parse(text);
@@ -58,7 +71,7 @@ async function handleFileSelect(event) {
     startGame();
   } catch (err) {
     console.error('Error loading file:', err);
-    alert('Invalid game file');
+    updateStatus('Invalid game file: ' + err.message, true);
   }
 }
 
@@ -67,19 +80,42 @@ window.addEventListener('DOMContentLoaded', () => {
   const fileInput = document.getElementById('gameFileInput');
   if (fileInput) fileInput.addEventListener('change', handleFileSelect);
 
-  // Try to auto-load sample-game.json from the same folder root
+  // Try to load sample game from URL parameter or default sample
   (async function tryLoadSample(){
     try {
-      const resp = await fetch('../sample-game.json', { cache: 'no-store' });
-      if (!resp.ok) throw new Error('not found');
+      const urlParams = new URLSearchParams(window.location.search);
+      const sampleName = urlParams.get('sample');
+      const samplePath = sampleName 
+        ? `../samples/${sampleName}.json`
+        : '../sample-game.json';
+
+      const resp = await fetch(samplePath, { cache: 'no-store' });
+      if (!resp.ok) throw new Error('Sample not found: ' + samplePath);
       const text = await resp.text();
       gameState = JSON.parse(text);
       startGame();
 
       // If sample includes audio (Tone.js) the sample init will handle it
-      console.log('Sample auto-loaded');
+      console.log('Sample loaded:', samplePath);
     } catch (err) {
-      console.warn('Could not auto-load sample:', err);
+      console.error('Could not load sample:', err);
+      updateStatus('Could not load requested game: ' + err.message, true);
+      // Try loading default sample if specific sample failed
+      if (window.location.search.includes('sample=')) {
+        try {
+          updateStatus('Trying to load default sample...');
+          const resp = await fetch('../sample-game.json', { cache: 'no-store' });
+          if (!resp.ok) throw new Error('Default sample not found');
+          const text = await resp.text();
+          gameState = JSON.parse(text);
+          startGame();
+          console.log('Fallback to default sample');
+          updateStatus('Loaded default sample');
+        } catch (defaultErr) {
+          console.error('Could not load default sample:', defaultErr);
+          updateStatus('Could not load any game: ' + defaultErr.message, true);
+        }
+      }
     }
   })();
     

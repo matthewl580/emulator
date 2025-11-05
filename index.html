@@ -3,14 +3,92 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <title>ChipCode - Home</title>
-        <link rel="stylesheet" href="styles.css">
+        <title>ChipCode - Game Library</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <style>
+            .game-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+                padding: 2rem;
+            }
+
+            .game-card {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 1rem;
+                padding: 1.5rem;
+                -webkit-backdrop-filter: blur(10px);
+                backdrop-filter: blur(10px);
+                transition: transform 0.3s ease;
+            }
+
+            .game-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .game-card h2 {
+                color: #fff;
+                margin-top: 0;
+            }
+
+            .game-card p {
+                color: #ccc;
+                margin-bottom: 1rem;
+            }
+
+            .game-preview {
+                width: 100%;
+                height: 200px;
+                background: #000;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: monospace;
+                color: #666;
+            }
+
+            .play-button {
+                display: inline-block;
+                padding: 0.5rem 1rem;
+                background: linear-gradient(45deg, #4CAF50, #45a049);
+                color: white;
+                text-decoration: none;
+                border-radius: 0.25rem;
+                transition: all 0.3s ease;
+            }
+
+            .play-button:hover {
+                background: linear-gradient(45deg, #45a049, #4CAF50);
+                transform: scale(1.05);
+            }
+
+            .hero {
+                text-align: center;
+                padding: 4rem 2rem;
+                background: linear-gradient(160deg, #2c3e50, #3498db);
+                margin-bottom: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                color: #fff;
+                margin-bottom: 1rem;
+            }
+
+            .hero p {
+                color: #eee;
+                font-size: 1.2rem;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        </style>
         <script>
-            // Check for saved theme preference, otherwise use system preference
+            // Theme handling
             const getPreferredTheme = () => {
-                const saved = localStorage.getItem('theme');
-                if (saved) return saved;
-                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                return localStorage.getItem('theme') || 
+                       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             };
 
             // Apply theme to document
@@ -31,9 +109,6 @@
         </script>
     </head>
     <body>
-        <button onclick="toggleTheme()" class="theme-toggle">
-            Toggle Theme
-        </button>
         <nav class="nav">
             <div class="nav-inner">
                 <a class="nav-brand" href="/index.html">ChipCode</a>
@@ -45,14 +120,94 @@
             </div>
         </nav>
 
-        <main class="home-main">
-            <h1>ChipCode Home</h1>
-            <p>Use the links above to open the Editor, the Game view, or the Documentation.</p>
-            <ul>
-                <li><a href="/editor/">Open Editor</a></li>
-                <li><a href="/game/">Open Play</a></li>
-                <li><a href="/docs/">Documentation</a></li>
-            </ul>
+        <div class="hero">
+            <h1>Sample Game Library</h1>
+            <p>Explore our collection of sample games to learn and get inspired. Each game demonstrates different programming concepts and gameplay mechanics.</p>
+        </div>
+
+        <main class="game-grid">
+            <div class="game-card">
+                <div class="game-preview">Space Shooter Preview</div>
+                <h2>Space Shooter</h2>
+                <p>A classic space shooter where you defend against waves of enemies. Features projectile mechanics, collision detection, and scoring system.</p>
+                <a href="/game/?sample=space-shooter" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Snake Game Preview</div>
+                <h2>Snake</h2>
+                <p>The timeless snake game with growing mechanics, collision detection, and food spawning. A perfect example of array manipulation and game state management.</p>
+                <a href="/game/?sample=snake" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Breakout Preview</div>
+                <h2>Breakout</h2>
+                <p>A Breakout clone featuring physics, paddle controls, and brick destruction. Demonstrates collision detection and ball physics.</p>
+                <a href="/game/?sample=breakout" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Platformer Preview</div>
+                <h2>Platformer</h2>
+                <p>A simple platformer with physics, jumping mechanics, and coin collection. Shows how to implement basic platformer physics and controls.</p>
+                <a href="/game/?sample=platformer" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Puzzle Match Preview</div>
+                <h2>Puzzle Match</h2>
+                <p>Match-three puzzle game with sliding mechanics and combo detection. Great example of grid-based gameplay and pattern matching.</p>
+                <a href="/game/?sample=puzzle-match" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Racing Game Preview</div>
+                <h2>Racing</h2>
+                <p>Top-down racing game with checkpoint system and lap counting. Features car physics and track collision detection.</p>
+                <a href="/game/?sample=racing" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Wave Shooter Preview</div>
+                <h2>Wave Shooter</h2>
+                <p>Defend against waves of enemies with power-ups and multiple weapons. Demonstrates wave spawning and power-up systems.</p>
+                <a href="/game/?sample=wave-shooter" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Maze Game Preview</div>
+                <h2>Maze</h2>
+                <p>Navigate through procedurally generated mazes with a torch lighting effect. Shows maze generation algorithms and lighting effects.</p>
+                <a href="/game/?sample=maze" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Sokoban Preview</div>
+                <h2>Sokoban</h2>
+                <p>Classic box-pushing puzzle game with undo functionality. Great example of puzzle mechanics and state management.</p>
+                <a href="/game/?sample=sokoban" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Word Game Preview</div>
+                <h2>Word Game</h2>
+                <p>A hangman-style word guessing game with animation effects. Demonstrates string manipulation and game state management.</p>
+                <a href="/game/?sample=word-game" class="play-button">Play Game</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-preview">Drawing App Preview</div>
+                <h2>Drawing App</h2>
+                <p>A simple drawing application with multiple tools and undo/redo. Shows canvas drawing and input handling.</p>
+                <a href="/game/?sample=drawing-app" class="play-button">Play Game</a>
+            </div>
+                <div class="game-card">
+                    <div class="game-preview">Pinball Preview</div>
+                    <h2>Pinball</h2>
+                    <p>A classic pinball game with flippers, bumpers, and combo scoring system. Features realistic physics and dynamic sound effects.</p>
+                    <a href="/game/?sample=pinball" class="play-button">Play Game</a>
+                </div>
         </main>
     </body>
-    </html>
+</html>

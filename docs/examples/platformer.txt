@@ -1,0 +1,85 @@
+# Simple Platformer in ChipScript
+# This demonstrates physics, collisions, and sound effects
+
+# Game state initialization
+setup {
+    # Create player with position and physics
+    let player = [
+        x: 32, y: 32,      # Position
+        vx: 0, vy: 0,      # Velocity
+        width: 4, height: 4,
+        can_jump: false
+    ];
+    
+    # Create platforms
+    let platforms = [
+        [x: 10, y: 50, width: 20, height: 2],
+        [x: 40, y: 40, width: 20, height: 2]
+    ];
+    
+    # Physics constants
+    let gravity = 0.5;
+    let jump_force = -8;
+    let move_speed = 2;
+    let friction = 0.8;
+    
+    # Input handler for jumping
+    on key_press(key) {
+        if (key == "UP" && player.can_jump) {
+            player.vy = jump_force;
+            sound("jump", [volume: 0.5, pitch: 1.2]);
+        }
+    }
+}
+
+# Main game loop
+loop {
+    # Apply gravity
+    player.vy = player.vy + gravity;
+    
+    # Handle movement
+    if (key_down("LEFT")) {
+        player.vx = -move_speed;
+    } else if (key_down("RIGHT")) {
+        player.vx = move_speed;
+    } else {
+        player.vx = player.vx * friction;  # Apply friction when not moving
+    }
+    
+    # Update position
+    player.x = player.x + player.vx;
+    player.y = player.y + player.vy;
+    
+    # Check platform collisions
+    player.can_jump = false;
+    for (platform in platforms) {
+        if (rect_overlap(player, platform)) {
+            if (player.vy > 0) {  # Only collide when falling
+                player.y = platform.y - player.height;
+                player.vy = 0;
+                player.can_jump = true;
+            }
+        }
+    }
+    
+    # Keep player in bounds
+    player.x = clamp(player.x, 0, 60);
+    player.y = clamp(player.y, 0, 60);
+    
+    # Draw everything
+    clear(#000033);  # Dark blue background
+    
+    # Draw platforms
+    for (platform in platforms) {
+        rect(platform.x, platform.y, platform.width, platform.height, #666666);
+    }
+    
+    # Draw player
+    rect(player.x, player.y, player.width, player.height, #00ff00);
+    
+    # Draw debug info
+    text("Press UP to jump!", 2, 2, #ffffff);
+    if (debug_mode) {
+        text("Velocity: " + player.vx + "," + player.vy, 2, 58, #ffffff);
+    }
+}

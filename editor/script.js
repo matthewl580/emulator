@@ -39,7 +39,62 @@ window.addEventListener('DOMContentLoaded', () => {
   const exportBtn = document.getElementById('exportBtn');
   const importBtn = document.getElementById('importBtn');
   const fileInput = document.getElementById('fileInput');
+  const runBtn = document.getElementById('runBtn');
+  const canvas = document.getElementById('game-canvas');
+  const ctx = canvas.getContext('2d');
+  window._ctx = ctx;
   if (exportBtn) exportBtn.addEventListener('click', exportCodeEditor);
   if (importBtn) importBtn.addEventListener('click', importCodeEditor);
   if (fileInput) fileInput.addEventListener('change', handleFileInputEditor);
+
+  // Prefill editor with the pinball sample if available
+  (async function prefill() {
+    try {
+      const res = await fetch('/samples/snake.json');
+      if (!res.ok) throw new Error('not found');
+      const sample = await res.json();
+      document.getElementById('initCode').value = sample.initCode || '';
+      document.getElementById('updateCode').value = sample.updateCode || '';
+    } catch (err) {
+      // fallback: leave blank
+      console.warn('Could not load sample pinball:', err);
+    }
+  })();
+
+  // Simple runner: executes init once, then runs update each animation frame.
+  let raf = null;
+  function stopLoop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+  }
+
+  function startLoop() {
+    stopLoop();
+    // run init code once
+    try {
+      const initSrc = document.getElementById('initCode').value || '';
+      if (initSrc.trim()) new Function(initSrc)();
+    } catch (e) {
+      console.error('Init error', e);
+      alert('Init code error: ' + e.message);
+      return;
+    }
+
+    function tick() {
+      try {
+        const updateSrc = document.getElementById('updateCode').value || '';
+        if (updateSrc.trim()) new Function(updateSrc)();
+      } catch (e) {
+        console.error('Update error', e);
+        // stop on runtime error to avoid spam
+        stopLoop();
+        alert('Update code error: ' + e.message);
+        return;
+      }
+      raf = requestAnimationFrame(tick);
+    }
+    raf = requestAnimationFrame(tick);
+  }
+
+  if (runBtn) runBtn.addEventListener('click', startLoop);
 });

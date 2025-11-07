@@ -115,7 +115,14 @@
                 <div class="nav-links">
                     <a href="/editor/">Editor</a>
                     <a href="/game/">Play</a>
-                    <a href="/docs/">Docs</a>
+                    <div class="nav-item" aria-haspopup="true">
+                        <a href="/docs/" aria-expanded="false">Docs <span class="caret">▾</span></a>
+                        <div class="submenu" role="menu" aria-label="Docs submenu">
+                            <a role="menuitem" href="/docs/">Overview</a>
+                            <a role="menuitem" href="/docs/api">API</a>
+                            <a role="menuitem" href="/docs/guides">Guides</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>

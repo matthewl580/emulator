@@ -45,8 +45,9 @@ body {
     color: var(--text-primary);
     line-height: 1.5;
     margin: 0;
-    padding: 0;
+    padding: 10px;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* Modern Navigation */
@@ -59,6 +60,7 @@ body {
     z-index: 1000;
     -webkit-backdrop-filter: var(--blur-sm);
     backdrop-filter: var(--blur-sm);
+    border-radius: 12px;
 }
 
 .nav-inner {
@@ -131,6 +133,73 @@ body {
 
 .nav-links a:hover::before {
     opacity: 0.1;
+}
+
+/* Docs menu dropdown (improved accessibility and UX) */
+.nav-links .nav-item {
+    position: relative;
+}
+
+.nav-links .nav-item > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-links .nav-item .caret {
+    font-size: 12px;
+    line-height: 1;
+    opacity: 0.8;
+}
+
+.nav-links .nav-item .submenu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 160px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(2,6,23,0.6);
+    padding: 8px 0;
+    display: none;
+    z-index: 1200;
+}
+
+.nav-links .nav-item .submenu a {
+    display: block;
+    padding: 8px 16px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-links .nav-item .submenu a:hover,
+.nav-links .nav-item .submenu a:focus {
+    color: var(--text-primary);
+    background: var(--glass-bg);
+}
+
+.nav-links .nav-item:focus-within .submenu,
+.nav-links .nav-item:hover .submenu {
+    display: block;
+}
+
+/* Improved focus outline for keyboard users */
+.nav-links a:focus {
+    outline: 3px solid rgba(59,130,246,0.18);
+    outline-offset: 3px;
+}
+
+/* Editor context helper */
+.editor-context h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+}
+
+.editor-context p.text-sm {
+    margin: 6px 0;
 }
 
 /* Main Container */
